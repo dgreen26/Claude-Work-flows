@@ -94,7 +94,7 @@ def node_rag_context(state: RiskState) -> RiskState:
         summary = result.answer
     except Exception as e:
         log.warning("RAG context failed for %s: %s", supplier, e)
-        summary = ""
+        summary = f"RAG context unavailable: {e}"
     return {**state, "rag_summary": summary}
 
 

@@ -81,6 +81,23 @@ def _build_citations(chunks: list[RetrievedChunk]) -> list[dict]:
     return citations
 
 
+def _has_llm_key() -> bool:
+    return bool(settings.anthropic_api_key or settings.openai_api_key)
+
+
+def _synthesize_no_llm(question: str, chunks: list[RetrievedChunk]) -> str:
+    """
+    Fallback synthesis when no LLM key is configured.
+    Returns the retrieved context directly so the pipeline is still demonstrable.
+    """
+    lines = [f"[Retrieved {len(chunks)} relevant document(s) — no LLM key set, showing raw retrieval]\n"]
+    for i, chunk in enumerate(chunks, 1):
+        meta = chunk.metadata
+        title = meta.get("title", "")[:60]
+        lines.append(f"[SOURCE {i}] {title}\n{chunk.content[:300]}...\n")
+    return "\n".join(lines)
+
+
 def answer(
     question: str,
     use_hyde: bool = False,
@@ -88,27 +105,34 @@ def answer(
 ) -> RiskAnswer:
     """
     End-to-end RAG answer: retrieve → format → synthesize → return with citations.
+    Works without an LLM key (returns raw retrieved chunks instead of synthesis).
     """
     synthesis_model = model or settings.litellm_model_synthesis
 
     def hyde_fn(q: str) -> str:
         resp = litellm.completion(
             model=settings.litellm_model_classification,
-            messages=[{
-                "role": "user",
-                "content": f"Write a short passage that would answer: {q}",
-            }],
+            messages=[{"role": "user", "content": f"Write a short passage that would answer: {q}"}],
             max_tokens=200,
         )
         return resp.choices[0].message.content
 
-    chunks = retrieve(question, use_hyde=use_hyde, hyde_llm_fn=hyde_fn if use_hyde else None)
+    chunks = retrieve(question, use_hyde=use_hyde, hyde_llm_fn=hyde_fn if (use_hyde and _has_llm_key()) else None)
 
     if not chunks:
         return RiskAnswer(
             question=question,
             answer="No relevant documents found in the knowledge base for this query.",
             chunks_used=0,
+        )
+
+    if not _has_llm_key():
+        return RiskAnswer(
+            question=question,
+            answer=_synthesize_no_llm(question, chunks),
+            citations=_build_citations(chunks),
+            chunks_used=len(chunks),
+            model="no-llm-key (retrieval only)",
         )
 
     sources_text = _format_sources(chunks)
@@ -121,7 +145,7 @@ def answer(
             {"role": "user", "content": prompt},
         ],
         max_tokens=1024,
-        temperature=0.1,  # low temp for factual synthesis
+        temperature=0.1,
     )
 
     answer_text = resp.choices[0].message.content
