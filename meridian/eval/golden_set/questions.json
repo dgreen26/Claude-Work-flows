@@ -1,0 +1,82 @@
+[
+  {
+    "id": "q001",
+    "question": "What supply chain risks has TSMC disclosed related to geopolitical tension in Taiwan?",
+    "ground_truth": "TSMC has disclosed risks related to cross-strait tensions between Taiwan and China, including potential disruptions to manufacturing operations, export restrictions, and the concentration risk of having the majority of advanced semiconductor production in a single geographic region.",
+    "risk_category": "geopolitical_risk",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  },
+  {
+    "id": "q002",
+    "question": "What are the main logistics disruption risks at the Port of Los Angeles?",
+    "ground_truth": "The Port of Los Angeles faces risks including labor disputes with longshoremen unions, container backlogs during peak shipping seasons, equipment shortages, and congestion that can delay goods by days to weeks.",
+    "risk_category": "logistics_disruption",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  },
+  {
+    "id": "q003",
+    "question": "How have semiconductor shortages affected automotive supply chains?",
+    "ground_truth": "Semiconductor shortages have forced automotive manufacturers including Ford, GM, and Toyota to cut production, idle plants, and prioritize high-margin vehicles. The shortage stems from surge demand for consumer electronics during COVID-19 consuming chip fab capacity that had historically served automakers.",
+    "risk_category": "commodity_shortage",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  },
+  {
+    "id": "q004",
+    "question": "What regulatory risks affect lithium battery supply chains?",
+    "ground_truth": "Lithium battery supply chains face regulatory risks including Uyghur Forced Labor Prevention Act (UFLPA) restrictions on polysilicon and lithium from Xinjiang, EU battery passport requirements, and evolving critical mineral sourcing requirements under the US Inflation Reduction Act.",
+    "risk_category": "regulatory_change",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  },
+  {
+    "id": "q005",
+    "question": "What were the supply chain impacts of the Ever Given Suez Canal blockage?",
+    "ground_truth": "The March 2021 grounding of the Ever Given in the Suez Canal blocked approximately 12% of global trade for six days, delaying over 400 vessels, disrupting European and Asian trade lanes, and causing estimated losses of $9.6 billion per day in trade value.",
+    "risk_category": "logistics_disruption",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  },
+  {
+    "id": "q006",
+    "question": "How do labor disputes at major ports affect global shipping timelines?",
+    "ground_truth": "Labor disputes at major ports such as the US West Coast and UK's Felixstowe can cause container backlogs of weeks, rerouting of vessels to alternative ports with higher costs, blank sailings, and cascading delays across downstream supply chains.",
+    "risk_category": "labor_dispute",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  },
+  {
+    "id": "q007",
+    "question": "What financial distress signals indicate a supplier may fail within 12 months?",
+    "ground_truth": "Key financial distress signals include declining current ratio below 1.0, increasing debt-to-equity ratio, consecutive quarters of negative operating cash flow, credit rating downgrades, covenant violations disclosed in 10-Q filings, and auditor going-concern qualifications in 10-K filings.",
+    "risk_category": "financial_distress",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  },
+  {
+    "id": "q008",
+    "question": "What cybersecurity risks affect manufacturing OT systems in supply chains?",
+    "ground_truth": "Operational technology (OT) systems in manufacturing face risks including ransomware targeting industrial control systems (as seen in the Colonial Pipeline and JBS Foods attacks), supply chain software compromises (SolarWinds), and lack of patching cycles in legacy SCADA systems.",
+    "risk_category": "cybersecurity",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  },
+  {
+    "id": "q009",
+    "question": "How do natural disasters in Southeast Asia affect electronics supply chains?",
+    "ground_truth": "Natural disasters including Thai floods (2011, affecting 25% of global hard drive production), Japanese earthquakes and tsunamis, and Philippine typhoons have demonstrated that concentrated electronics manufacturing in Southeast Asia creates significant single-point-of-failure risks for global supply chains.",
+    "risk_category": "natural_disaster",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  },
+  {
+    "id": "q010",
+    "question": "What are the supply chain implications of US-China trade tariffs on rare earth materials?",
+    "ground_truth": "US-China trade tensions and tariffs on rare earth materials create risks for manufacturers dependent on Chinese rare earths for magnets, batteries, and electronics. China controls approximately 60% of rare earth mining and 85% of processing capacity, giving it significant leverage in trade disputes.",
+    "risk_category": "geopolitical_risk",
+    "known_outcome": true,
+    "expected_context_snippets": []
+  }
+]

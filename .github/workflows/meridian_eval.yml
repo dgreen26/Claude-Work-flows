@@ -1,0 +1,72 @@
+name: Meridian RAG Eval Gate
+
+on:
+  pull_request:
+    paths:
+      - "meridian/**"
+      - "requirements-meridian.txt"
+
+jobs:
+  eval:
+    name: RAGAS Eval Gate
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: meridian
+          POSTGRES_USER: meridian
+          POSTGRES_PASSWORD: meridian
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-meridian.txt
+
+      - name: Seed knowledge base with golden context
+        env:
+          DATABASE_URL: postgresql://meridian:meridian@localhost:5432/meridian
+          REDIS_URL: redis://localhost:6379/0
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m meridian.eval.seed_db
+
+      - name: Run RAGAS eval gate
+        env:
+          DATABASE_URL: postgresql://meridian:meridian@localhost:5432/meridian
+          REDIS_URL: redis://localhost:6379/0
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LITELLM_MODEL_SYNTHESIS: anthropic/claude-sonnet-4-6
+          LITELLM_MODEL_CLASSIFICATION: anthropic/claude-haiku-4-5-20251001
+        run: python -m meridian.eval.harness --ci --output eval_report.json
+
+      - name: Upload eval report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: eval_report.json
